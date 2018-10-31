@@ -140,7 +140,7 @@ public class StringUtility {
 		  char lastChar = Character.toUpperCase(municipalityName[(municipalityName.length)-1].charAt(0));
 		  
 		  
-		  municipalityUniqueName = municipalityUniqueName+" "+secondLastChar+lastChar+"_";
+		  municipalityUniqueName = municipalityUniqueName+secondLastChar+lastChar+"_";
 		  LOGGER.debug("The municipality Unique name is : " + municipalityUniqueName);
 		  return municipalityUniqueName;
 	  }
