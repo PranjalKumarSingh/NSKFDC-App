@@ -40,6 +40,7 @@ import com.nskfdc.scgj.dao.EmployerDao;
 import com.nskfdc.scgj.dto.BatchImportDto;
 import com.nskfdc.scgj.dto.DownloadFinalMasterSheetDto;
 import com.nskfdc.scgj.dto.MasterSheetImportDto;
+import com.nskfdc.scgj.dto.MasterSheetImportGenerateSheetDto;
 import com.nskfdc.scgj.dto.MasterSheetSubmitDto;
 
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -1175,16 +1176,40 @@ public class DataImportService {
 								if(cell.getStringCellValue()==null || cell.getStringCellValue().isEmpty() || cell.getStringCellValue()=="" ) {
 									LOGGER.debug("The Bank A/C number has empty string, so skipping the insertion of Bank A/C number");
 								}
-								else {
-									LOGGER.error("The Bank A/C number has value string :"+ cell.getStringCellValue());
-									return "Invalid Bank A/C Number format at row : "+rowNumber+". Please enter numeric value";
+								else 
+								{
+									try
+									{
+										LOGGER.error("The Bank A/C number has value string :"+ cell.getStringCellValue());
+										String accountNumberValue = cell.getStringCellValue();
+										LOGGER.debug("The cell value for account number before parsing to long is: "+accountNumberValue);
+										LOGGER.debug("Parsing the account number from string type to long");
+										Long accountNumber = Long.parseLong(accountNumberValue);
+										masterSheetImportDto.setAccountNumber(accountNumber);
+									}
+									catch(NumberFormatException nE)
+									{
+										LOGGER.error("An exception occured while parsing the account number value from string to long: "+nE);
+										return "Bank Account Number field can only contain digits at row: "+rowNumber;
+									}
+									
 								}
 								
 							}
 							else if(cell.getCellType()==Cell.CELL_TYPE_NUMERIC) {
 								if(cell.getNumericCellValue()>0) {
-									LOGGER.debug("The Bank A/C no. has value : "+cell.getNumericCellValue());
-									masterSheetImportDto.setAccountNumber((long) cell.getNumericCellValue());
+									LOGGER.debug("The account number cell is numeric type");
+									try 
+									{
+										LOGGER.debug("The Bank A/C no. has value : "+cell.getNumericCellValue());
+										masterSheetImportDto.setAccountNumber((long) cell.getNumericCellValue());
+									}
+									catch(NumberFormatException nE)
+									{
+										LOGGER.error("An exception occured while setting the value of account number: "+nE);
+										return "Bank Account Number field can only contain digits at row: "+rowNumber;
+									}
+									
 								}
 								else {
 									LOGGER.debug("Bank A/C no. has value less than 1, so skipping the insertion of Bank A/C no.");
@@ -1587,11 +1612,6 @@ public class DataImportService {
 			//to be reviewed till here - end of try block
 		}
 		
-		catch(IOException io)
-		{
-			LOGGER.error("An input output error occured while reading candidate excel sheet. Exception is : "+ io);
-			return "An error has occured please contact administrator";
-		}
 		catch(Exception e)
 		{
 			LOGGER.error("An input output error occured while reading candidate excel sheet. Exception is : "+ e);
@@ -1741,7 +1761,7 @@ public class DataImportService {
 			Collection<DownloadFinalMasterSheetDto> downloadMasterSheetInformation = dataImportDao
 					.downloadMasterSheetDao(userEmail, batchId);
 
-			Collection<MasterSheetImportDto> candidateSheetInformation = dataImportDao.candidateSheetDetails(batchId);
+			Collection<MasterSheetImportGenerateSheetDto> candidateSheetInformation = dataImportDao.candidateSheetDetails(batchId);
 
 			if (CollectionUtils.isNotEmpty(downloadMasterSheetInformation)) {
 
@@ -1757,11 +1777,11 @@ public class DataImportService {
 						
 						if(batchSize<10)
 						{
-							candidateSheetInformation.add(new MasterSheetImportDto(batchId+"/"+"0"+batchSize.toString()));
+							candidateSheetInformation.add(new MasterSheetImportGenerateSheetDto(batchId+"/"+"0"+batchSize.toString()));
 						}
 						else if(batchSize>=10)
 						{
-							candidateSheetInformation.add(new MasterSheetImportDto(batchId+"/"+batchSize.toString()));
+							candidateSheetInformation.add(new MasterSheetImportGenerateSheetDto(batchId+"/"+batchSize.toString()));
 						}
 							batchSize++;
 					}
