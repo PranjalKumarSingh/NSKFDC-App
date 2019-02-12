@@ -25,6 +25,7 @@ import com.nskfdc.scgj.dto.BatchImportDto;
 import com.nskfdc.scgj.dto.DownloadFinalMasterSheetDto;
 import com.nskfdc.scgj.dto.FinancialDto;
 import com.nskfdc.scgj.dto.MasterSheetImportDto;
+import com.nskfdc.scgj.dto.MasterSheetImportGenerateSheetDto;
 import com.nskfdc.scgj.dto.MasterSheetSubmitDto;
 
 @Repository
@@ -276,7 +277,7 @@ public class DataImportDao extends AbstractTransactionalDao {
 	 * @param batchId for which master sheet needs to be generated
 	 * @return
 	 */
-	public Collection<MasterSheetImportDto> candidateSheetDetails(String batchId){
+	public Collection<MasterSheetImportGenerateSheetDto> candidateSheetDetails(String batchId){
 		LOGGER.debug("Request received from Service");
 		LOGGER.debug("In candidateSheetDetails Dao - to get details of candidate of selected batchId");
 		
@@ -327,10 +328,10 @@ public class DataImportDao extends AbstractTransactionalDao {
 	 *
 	 */
 	private static class GenerateCandidateSheetRowmapper implements
-	RowMapper<MasterSheetImportDto> {
+	RowMapper<MasterSheetImportGenerateSheetDto> {
 
 		@Override
-		public MasterSheetImportDto mapRow(ResultSet rs, int rowNum)
+		public MasterSheetImportGenerateSheetDto mapRow(ResultSet rs, int rowNum)
 				throws SQLException {
 		
 			String enrollmentNumber = rs.getString("enrollmentNumber");
@@ -350,7 +351,7 @@ public class DataImportDao extends AbstractTransactionalDao {
 			 String bankName = rs.getString("bankName");
 			 String ifscCode = rs.getString("ifscCode");
 			 String workplaceAddress = rs.getString("workplaceAddress");
-			 Long accountNumber = rs.getLong("accountNumber");
+			 String accountNumber = rs.getString("accountNumber");
 			 String relationWithSKMS = rs.getString("relationWithSKMS");
 			 Date dob = rs.getDate("dob");
 			 String guardianType = rs.getString("guardianType");
@@ -368,7 +369,7 @@ public class DataImportDao extends AbstractTransactionalDao {
 			 Long  outsourcedEmployerContact = rs.getLong("outsourcedEmployerContact");
 			 Long monthlySalary = rs.getLong("monthlySalary");
 			 String pfOrEsiProvided = rs.getString("pfOrEsiProvided");
-			 return new MasterSheetImportDto(	 enrollmentNumber,  salutation,  firstName,  lastName,
+			 return new MasterSheetImportGenerateSheetDto(	 enrollmentNumber,  salutation,  firstName,  lastName,
 					 gender,  mobileNumber,  educationQualification,  state,  district,
 					 adhaarCardNumber,  idProofType,  idProofNumber,  disabilityType,  age,
 					 bankName,  ifscCode,  workplaceAddress,  accountNumber,  relationWithSKMS,
