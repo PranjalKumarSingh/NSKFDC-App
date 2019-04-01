@@ -347,10 +347,10 @@ var url = '/getBatchIdfortrainer';
     		$scope.employerNumberErrorFlag=false;
     		$scope.centreIdErrorFlag=true;
     	}	
-    	else if($scope.batch.batchStartDate != null && $scope.batch.batchStartDate!=undefined && $scope.batch.batchStartDate != "" && ($scope.batch.batchStartDate<$scope.minyear || $scope.batch.batchStartDate>$scope.maxyear)){
-    		$scope.startDateFlag = true;
-    		$scope.startDateError = "Enter valid Batch Start Date";
-    	}
+//    	else if($scope.batch.batchStartDate != null && $scope.batch.batchStartDate!=undefined && $scope.batch.batchStartDate != "" && ($scope.batch.batchStartDate<$scope.minyear || $scope.batch.batchStartDate>$scope.maxyear)){
+//    		$scope.startDateFlag = true;
+//    		$scope.startDateError = "Enter valid Batch Start Date";
+//    	}
     	else if($scope.checkEndDate())
     	{
     		$scope.startDateFlag = false;
